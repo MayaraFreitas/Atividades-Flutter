@@ -1,9 +1,12 @@
 import 'dart:math';
+import 'package:roguelike/carneiro.dart';
 import 'package:roguelike/celula.dart';
 import 'package:roguelike/criatura.dart';
 import 'package:roguelike/mundo.dart';
 import 'package:roguelike/ponto_2d.dart';
 import 'package:roguelike/tesouro.dart';
+
+import 'lobo.dart';
 
 // Classe que criará mundos seguindo o padrão Builder
 class MundoBuilder {
@@ -14,11 +17,15 @@ class MundoBuilder {
   int largura, altura;
   List<List<Celula>> mapa;
   List<Criatura> criaturas;
+  List<Carneiro> carneiros;
+  List<Lobo> lobos;
   List<Tesouro> tesouros;
 
   // Construtor padrão
   MundoBuilder(this.largura, this.altura) {
     criaturas = [];
+    carneiros = [];
+    lobos = [];
     tesouros = [];
   }
 
@@ -66,8 +73,15 @@ class MundoBuilder {
     // cria um número aleatório
     Random aleatorio = Random();
     int x, y;
+    int qtLobo, qtCriatura, qtCarneiro;
+
+    // sorteando numero de "criaturas" com base na quantidade escolhida
+    qtCarneiro = Random().nextInt(quantidadeCriaturas);
+    qtLobo = Random().nextInt(quantidadeCriaturas - qtCarneiro);
+    qtCriatura = quantidadeCriaturas - qtLobo;
+
     // Cria N criaturas
-    for (int i = 0; i < quantidadeCriaturas; i++) {
+    for (int i = 0; i < qtCriatura; i++) {
       // Impede que uma criatura seja criada em cima de uma parede
       do {
         x = aleatorio.nextInt(largura);
@@ -77,6 +91,29 @@ class MundoBuilder {
       // Adiciona a criatura na lista de criaturas
       criaturas.add(Criatura(Ponto2D(x, y), Criatura.SIMBOLO_CRIATURA));
     }
+
+    for (int i = 0; i < qtLobo; i++) {
+      // Impede que uma criatura seja criada em cima de uma parede
+      do {
+        x = aleatorio.nextInt(largura);
+        y = aleatorio.nextInt(altura);
+      } while (mapa[x][y].bloqueado);
+
+      // Adiciona a criatura na lista de criaturas
+      carneiros.add(Carneiro(Ponto2D(x, y), Carneiro.SIMBOLO_CRIATURA));
+    }
+
+    for (int i = 0; i < qtCriatura; i++) {
+      // Impede que uma criatura seja criada em cima de uma parede
+      do {
+        x = aleatorio.nextInt(largura);
+        y = aleatorio.nextInt(altura);
+      } while (mapa[x][y].bloqueado);
+
+      // Adiciona a criatura na lista de criaturas
+      lobos.add(Lobo(Ponto2D(x, y), Lobo.SIMBOLO_CRIATURA));
+    }
+    
     return this;
   }
 
@@ -101,6 +138,6 @@ class MundoBuilder {
 
   // Retorna um Mundo
   Mundo build() {
-    return Mundo(mapa, criaturas, tesouros);
+    return Mundo(mapa, criaturas, carneiros, lobos, tesouros);
   }
 }

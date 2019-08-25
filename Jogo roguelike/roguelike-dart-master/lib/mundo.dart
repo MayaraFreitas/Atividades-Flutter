@@ -1,11 +1,14 @@
 import 'dart:math';
 
+import 'package:roguelike/carneiro.dart';
 import 'package:roguelike/celula.dart';
 import 'package:roguelike/criatura.dart';
 import 'package:roguelike/jogador.dart';
-import 'package:roguelike/personagem.dart';
+import 'package:roguelike/lobo.dart';
 import 'package:roguelike/ponto_2d.dart';
 import 'package:roguelike/tesouro.dart';
+
+import 'entidade.dart';
 
 // Classe que representa o mundo do jogo
 class Mundo {
@@ -15,6 +18,10 @@ class Mundo {
   List<List<Celula>> mapa;
   // Lista de criaturas (NPCs)
   List<Criatura> criaturas;
+  // Lista de carneiros (NPCs)
+  List<Carneiro> carneiros;
+  // Lista de lobos (NPCs)
+  List<Lobo> lobos;
   //Lista de Tesouros
   List<Tesouro> tesouros;
   // Jogador controlado
@@ -23,7 +30,7 @@ class Mundo {
   // Construtor padrão do mundo
   // @mapa: mapa criado de qualquer forma
   // @crituras: lista de criaturas posicionadas
-  Mundo(this.mapa, this.criaturas, this.tesouros) {
+  Mundo(this.mapa, this.criaturas, this.carneiros, this.lobos, this.tesouros) {
     _largura = mapa.length;
     _altura = mapa[0].length;
   }
@@ -49,6 +56,22 @@ class Mundo {
         jogador.tomarDano(1);
       }
     }
+    
+    for (Carneiro carneiro in carneiros) {
+      // Atualiza a posição de um carneiro
+      carneiro.atualizar(this);
+    }
+
+    for (Lobo lobo in lobos) {
+      // Atualiza a posição de um lobo
+      lobo.atualizar(this);
+
+      // Se a posição de um lobo for igual a posição do jogador
+      if (lobo.posicao.toString() == jogador.posicao.toString()) {
+        // jogador toma 1 de dano (perde uma vida)
+        jogador.tomarDano(1);
+      }
+    }
 
     // verificar se existe algum tesouro na posição do usuario
     if(tesouros.any((t) => t.posicao.toString() == jogador.posicao.toString())){
@@ -63,9 +86,19 @@ class Mundo {
   void desenhar() {
 
     // Criar um mapa de criaturas baseado em suas posições
-    Map<String, Personagem> map = Map();
+    Map<String, Entidade> map = Map();
     for (Criatura creature in criaturas) {
       map[creature.posicao.toString()] = creature;
+    }
+
+    // Adicionar carneiros do mapa
+    for (Carneiro carneiro in carneiros) {
+      map[carneiro.posicao.toString()] = carneiro;
+    }
+
+    // Adicionar Lobos no mapa
+    for (Lobo lobo in lobos) {
+      map[lobo.posicao.toString()] = lobo;
     }
 
     // Adicionamos os tesouros no mapa

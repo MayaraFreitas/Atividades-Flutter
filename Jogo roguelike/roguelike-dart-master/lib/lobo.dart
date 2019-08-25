@@ -13,10 +13,21 @@ class Lobo extends Personagem{
   void atualizar(Mundo mundo) {
 
     // Mover na direção do jogador
-    int deltaX = mundo.jogador.posicao.x - posicao.x > 0 ? 1 : -1;
-    int deltaY = mundo.jogador.posicao.y - posicao.y > 0 ? 1 : -1;
-    
-    mover(mundo,deltaX,deltaY);
+    // O lobo anda na diagonal sim! hehehe
+    mover(mundo, comparaPosicao(mundo.jogador.posicao.x, posicao.x),comparaPosicao(mundo.jogador.posicao.y, posicao.y ));
+  }
+
+  int comparaPosicao(int posicaoJogador, int posicaoLobo){
+
+    if(posicaoJogador - posicaoLobo > 0 ){
+      return 1;
+    }
+    else if(posicaoJogador - posicaoLobo < 0 ){
+      return -1;
+    }
+    else{ // se não, é igual
+      return 0;
+    }
   }
 
 }

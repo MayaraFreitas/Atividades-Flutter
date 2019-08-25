@@ -7,7 +7,7 @@ import 'package:roguelike/ponto_2d.dart';
 class Roguelike {
   // Constantes
   static final String SIMBOLO_PAREDE = "#";
-  static final int QUANTIDADE_CRIATUDAS = 60;
+  static final int QUANTIDADE_CRIATUDAS = 40;
   static final int QUANTIDADE_VIDAS = 2;
   static final int QUANTIDADE_TESOUROS = 100;
   static final double FATOR_PROFUNDIDADE = 2.0;
