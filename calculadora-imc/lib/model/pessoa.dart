@@ -17,7 +17,9 @@ class Pessoa{
   Pessoa(){
     weightController.text = '';
     heightController.text = '';
-    color = null;
+    imcText = '-';
+    imcSituationText = 'Informe seus dados';
+    color = Colors.black;
     genero = null;
   }
 
@@ -34,38 +36,57 @@ class Pessoa{
     else if(genero == _feminino){
       imcFeminino(imc);
     }
-    else{
+    else{ // Buscar como validar corretamente o radio btn!!
+      imcText = '-';
       imcSituationText = "Ops! Genero Não definido";
     }
   }
 
   void imcMasculino(double imc){
 
-    if (imc < 20.7)
+    if (imc < 20.7){
+      color = Colors.blue[300];
       imcSituationText = "Abaixo do peso";
-    else if (imc <= 26.4)
+    }
+    else if (imc <= 26.4){
+      color = Colors.green[300];
       imcSituationText = "Peso ideal";
-    else if (imc <= 27.8)
-      imcSituationText = "Levemente acima do peso";
-    else if (imc <= 31.1)
-      imcSituationText = "Acima do peso";
-    else
-      imcSituationText = "Obesidade";
-  }
-
-  String imcFeminino(double imc){
-    if (imc < 19.1)
-      imcSituationText = "Abaixo do peso";
-    else if (imc <= 25.8)
-      imcSituationText = "Peso ideal";
-    else if (imc <= 27.3)
-    {
-      color = Colors.red[300];
+    }
+    else if (imc <= 27.8){
+      color = Colors.orange[300];
       imcSituationText = "Levemente acima do peso";
     }
-    else if (imc <= 32.3)
+    else if (imc <= 31.1){
+      color = Colors.orange[800];
       imcSituationText = "Acima do peso";
-    else
+    }
+  else{
+      color = Colors.red[300];
+      imcSituationText = "Obesidade"; 
+    }
+  }
+
+  void imcFeminino(double imc){
+    if (imc < 19.1){
+      color = Colors.blue[300];
+      imcSituationText = "Abaixo do peso";
+    }
+    else if (imc <= 25.8){
+      color = Colors.green[300];
+      imcSituationText = "Peso ideal";
+    }
+    else if (imc <= 27.3)
+    {
+      color = Colors.orange[300];
+      imcSituationText = "Levemente acima do peso";
+    }
+    else if (imc <= 32.3){
+      color = Colors.orange[800];
+      imcSituationText = "Acima do peso";
+    }
+    else{
+      color = Colors.red[300];
       imcSituationText = "Obesidade";
+    }
   }
 }

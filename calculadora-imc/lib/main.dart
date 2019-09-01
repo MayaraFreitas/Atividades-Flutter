@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'model/pessoa.dart';
 
 void main() => runApp(MaterialApp(
@@ -15,7 +14,6 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  String _result;
   int groupValue;
   Pessoa pessoa;
 
@@ -29,15 +27,7 @@ class _HomeState extends State<Home> {
 
     pessoa = new Pessoa();
     setState(() {
-      _result = 'Informe seus dados';
-    });
-  }
-
-  void mudarRadioButton(int value){
-    print("V: " + value.toString());
-    pessoa.genero = value;
-    setState((){
-      groupValue = value;
+      groupValue = 0;
     });
   }
 
@@ -47,7 +37,9 @@ class _HomeState extends State<Home> {
       child: Text(
         pessoa.imcText, textAlign: TextAlign.center,
         style: new TextStyle(
-          fontSize: 50.00
+          fontSize: 40.00,
+          color: Colors.black,
+          fontWeight: FontWeight.bold
         ),
       )
     );
@@ -55,15 +47,23 @@ class _HomeState extends State<Home> {
 
   Widget buildImcSituationResult(){
     return Padding(
-      padding: EdgeInsets.only(top: 1.0),
+      padding: EdgeInsets.only(top: 10.0),
       child: Text(
         pessoa.imcSituationText, textAlign: TextAlign.center,
         style: new TextStyle(
-          fontSize: 20.00
+          fontSize: 20.00,
+          color: pessoa.color
         ),
       )
     );
 }
+
+  void changeRadioButton(int value){
+    pessoa.genero = value;
+    setState((){
+      groupValue = value;
+    });
+  }
 
   Widget buildCalculateImcButton(){
   return Padding(
@@ -100,7 +100,7 @@ class _HomeState extends State<Home> {
     value: value,
     activeColor: color,
     groupValue: groupValue,
-    onChanged: (int e) => mudarRadioButton(e),
+    onChanged: (int e) => changeRadioButton(e),
   );
 }
 
