@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'model/pessoa.dart';
+
 void main() => runApp(MaterialApp(
       home: Home(),
       debugShowCheckedModeBanner: false,
@@ -11,11 +13,11 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  TextEditingController _weightController = TextEditingController();
-  TextEditingController _heightController = TextEditingController();
+  
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   String _result;
+  int groupValue;
+  Pessoa pessoa;
 
   @override
   void initState() {
@@ -24,41 +26,36 @@ class _HomeState extends State<Home> {
   }
 
   void resetFields() {
-    _weightController.text = '';
-    _heightController.text = '';
+
+    pessoa = new Pessoa();
     setState(() {
       _result = 'Informe seus dados';
     });
   }
 
-  void calculateImc() {
-    double weight = double.parse(_weightController.text);
-    double height = double.parse(_heightController.text) / 100.0;
-    double imc = weight / (height * height);
-
-    setState(() {
-      _result = "IMC = ${imc.toStringAsPrecision(2)}\n";
-      if (imc < 18.6)
-        _result += "Abaixo do peso";
-      else if (imc < 25)
-        _result += "Peso ideal";
-      else if (imc < 30)
-        _result += "Levemente acima do peso";
-      else if (imc < 35)
-        _result += "Obesidade Grau I";
-      else if (imc < 40)
-        _result += "Obesidade Grau II";
-      else
-        _result += "Obesidade Grau IIII";
+  void mudarRadioButton(int value){
+    print("V: " + value.toString());
+    pessoa.genero = value;
+    setState((){
+      groupValue = value;
     });
   }
+
+Widget listTest(){
+    return Text(
+        _result, textAlign: TextAlign.center,
+        style: new TextStyle(
+          fontSize: 50.00
+        ),
+      );
+}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           title: Text('Calculadora de IMC'),
-          backgroundColor: Colors.blue,
+          backgroundColor: Colors.red,
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.refresh),
@@ -79,7 +76,7 @@ class _HomeState extends State<Home> {
                     TextFormField(
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(labelText: 'Peso (kg)'),
-                      controller: _weightController,
+                      controller: pessoa.weightController,
                       validator: (text) {
                         return text.isEmpty ? "Insira seu peso!" : null;
                       },
@@ -87,24 +84,43 @@ class _HomeState extends State<Home> {
                     TextFormField(
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(labelText: 'Altura (cm)'),
-                      controller: _heightController,
+                      controller: pessoa.heightController,
                       validator: (text) {
                         return text.isEmpty ? "Insira sua altura!" : null;
                       },
                     ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Radio(
+                          value: 1,
+                          activeColor: Colors.red,
+                          groupValue: groupValue,
+                          onChanged: (int e) => mudarRadioButton(e),
+                        ),
+                        Text("Masculino"),
+                        Radio(
+                          value: 2,
+                          activeColor: Colors.red,
+                          groupValue: groupValue,
+                          onChanged: (int e) => mudarRadioButton(e),
+                        ),
+                        Text("Feminino"),
+                      ],
+                    ),
                     Padding(
                       padding: EdgeInsets.only(top: 36.0),
-                      child: Text(_result, textAlign: TextAlign.center,),
+                      child: listTest()
                     ),
                     Padding(
                         padding: EdgeInsets.symmetric(vertical: 36.0),
                         child: Container(
                             height: 50,
                             child: RaisedButton(
-                              color: Colors.blueAccent,
+                              color: Colors.red,
                               onPressed: () {
                                 if (_formKey.currentState.validate()) {
-                                  calculateImc();
+                                  setState(() { _result = pessoa.calculateImc(); });
                                 }
                               },
                               child: Text('CALCULAR', style: TextStyle(color: Colors.white)),
