@@ -41,13 +41,79 @@ class _HomeState extends State<Home> {
     });
   }
 
-Widget listTest(){
-    return Text(
-        _result, textAlign: TextAlign.center,
+  Widget buildImcResult(){
+    return Padding(
+      padding: EdgeInsets.only(top: 36.0),
+      child: Text(
+        pessoa.imcText, textAlign: TextAlign.center,
         style: new TextStyle(
           fontSize: 50.00
         ),
-      );
+      )
+    );
+}
+
+  Widget buildImcSituationResult(){
+    return Padding(
+      padding: EdgeInsets.only(top: 1.0),
+      child: Text(
+        pessoa.imcSituationText, textAlign: TextAlign.center,
+        style: new TextStyle(
+          fontSize: 20.00
+        ),
+      )
+    );
+}
+
+  Widget buildCalculateImcButton(){
+  return Padding(
+      padding: EdgeInsets.symmetric(vertical: 36.0),
+      child: Container(
+          height: 50,
+          child: RaisedButton(
+            color: Colors.red,
+            onPressed: () {
+              if (_formKey.currentState.validate()) {
+                setState(() { pessoa.calculateImc(); });
+              }
+            },
+            child: Text('CALCULAR', style: TextStyle(color: Colors.white)),
+          )
+      )
+  );
+}
+
+  Widget buildGenderRadioButton(){
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: <Widget>[
+      Text("Masculino"),
+      buildRadioButton(value: 1, color: Colors.red),
+      Text("Feminino"),
+      buildRadioButton(value: 2, color: Colors.red),
+    ],
+  );
+}
+
+  Widget buildRadioButton({int value, Color color}){
+  return Radio(
+    value: value,
+    activeColor: color,
+    groupValue: groupValue,
+    onChanged: (int e) => mudarRadioButton(e),
+  );
+}
+
+  Widget buildTextFormField({String labelText, TextEditingController controller, String validatorMessage}){
+  return 
+    TextFormField(
+      keyboardType: TextInputType.number,
+      decoration: InputDecoration(labelText: labelText),
+      controller: controller,
+      validator: (text) {
+        return text.isEmpty ? validatorMessage : null;
+      },
+    );
 }
 
   @override
@@ -73,59 +139,12 @@ Widget listTest(){
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
-                    TextFormField(
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(labelText: 'Peso (kg)'),
-                      controller: pessoa.weightController,
-                      validator: (text) {
-                        return text.isEmpty ? "Insira seu peso!" : null;
-                      },
-                    ),
-                    TextFormField(
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(labelText: 'Altura (cm)'),
-                      controller: pessoa.heightController,
-                      validator: (text) {
-                        return text.isEmpty ? "Insira sua altura!" : null;
-                      },
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Radio(
-                          value: 1,
-                          activeColor: Colors.red,
-                          groupValue: groupValue,
-                          onChanged: (int e) => mudarRadioButton(e),
-                        ),
-                        Text("Masculino"),
-                        Radio(
-                          value: 2,
-                          activeColor: Colors.red,
-                          groupValue: groupValue,
-                          onChanged: (int e) => mudarRadioButton(e),
-                        ),
-                        Text("Feminino"),
-                      ],
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 36.0),
-                      child: listTest()
-                    ),
-                    Padding(
-                        padding: EdgeInsets.symmetric(vertical: 36.0),
-                        child: Container(
-                            height: 50,
-                            child: RaisedButton(
-                              color: Colors.red,
-                              onPressed: () {
-                                if (_formKey.currentState.validate()) {
-                                  setState(() { _result = pessoa.calculateImc(); });
-                                }
-                              },
-                              child: Text('CALCULAR', style: TextStyle(color: Colors.white)),
-                            ))),
-                            
+                    buildTextFormField(labelText: 'Peso (kg)', controller: pessoa.weightController, validatorMessage: "Insira seu peso!"),
+                    buildTextFormField(labelText: 'Altura (cm)', controller: pessoa.heightController, validatorMessage: "Insira sua altura!"),
+                    buildGenderRadioButton(),
+                    buildImcResult(),
+                    buildImcSituationResult(),
+                    buildCalculateImcButton()
                   ],
                 ))));
   }

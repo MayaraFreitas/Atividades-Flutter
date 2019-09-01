@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class Pessoa{
 
@@ -9,54 +10,62 @@ class Pessoa{
   TextEditingController heightController = TextEditingController();
   int genero; // (1) Masculino | (2) Feminino
 
+  Color color;
+  String imcText;
+  String imcSituationText;
+
   Pessoa(){
     weightController.text = '';
     heightController.text = '';
+    color = null;
     genero = null;
   }
 
-  String calculateImc() {
+  void calculateImc() {
 
     double weight = double.parse(weightController.text);
     double height = double.parse(heightController.text) / 100.0;
     double imc = weight / (height * height);
-    String imcStr = "IMC = ${imc.toStringAsPrecision(2)}\n";
-    
+    imcText = "IMC = ${imc.toStringAsPrecision(2)}\n";
+
     if(genero == _masculino){
-      return imcMasculino(imc, imcStr);
+      imcMasculino(imc);
     }
     else if(genero == _feminino){
-      return imcFeminino(imc, imcStr);
+      imcFeminino(imc);
     }
     else{
-      return "Ops! Genero Não definido";
+      imcSituationText = "Ops! Genero Não definido";
     }
   }
 
-  String imcMasculino(double imc, String imcStr){
+  void imcMasculino(double imc){
 
     if (imc < 20.7)
-      return imcStr += "Abaixo do peso";
+      imcSituationText = "Abaixo do peso";
     else if (imc <= 26.4)
-      return imcStr += "Peso ideal";
+      imcSituationText = "Peso ideal";
     else if (imc <= 27.8)
-      return imcStr += "Levemente acima do peso";
+      imcSituationText = "Levemente acima do peso";
     else if (imc <= 31.1)
-      return imcStr += "Acima do peso";
+      imcSituationText = "Acima do peso";
     else
-      return imcStr += "Obesidade";
+      imcSituationText = "Obesidade";
   }
 
-  String imcFeminino(double imc, String imcStr){
+  String imcFeminino(double imc){
     if (imc < 19.1)
-      return imcStr += "Abaixo do peso";
+      imcSituationText = "Abaixo do peso";
     else if (imc <= 25.8)
-      return imcStr += "Peso ideal";
+      imcSituationText = "Peso ideal";
     else if (imc <= 27.3)
-      return imcStr += "Levemente acima do peso";
+    {
+      color = Colors.red[300];
+      imcSituationText = "Levemente acima do peso";
+    }
     else if (imc <= 32.3)
-      return imcStr += "Acima do peso";
+      imcSituationText = "Acima do peso";
     else
-      return imcStr += "Obesidade";
+      imcSituationText = "Obesidade";
   }
 }
