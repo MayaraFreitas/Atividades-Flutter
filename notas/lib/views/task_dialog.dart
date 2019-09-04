@@ -13,6 +13,7 @@ class TaskDialog extends StatefulWidget {
 class _TaskDialogState extends State<TaskDialog> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   Task _currentTask = Task();
 
@@ -35,6 +36,18 @@ class _TaskDialogState extends State<TaskDialog> {
     _descriptionController.clear();
   }
 
+  Widget buildtextField({TextEditingController controller, String labelText, String validatorMessage, bool autoFocus}){
+      return 
+       TextFormField(
+              controller: controller,
+              decoration: InputDecoration(labelText: labelText),
+              autofocus: autoFocus,
+              validator: (text) {
+                return text.isEmpty ? validatorMessage : null;
+              }
+      ); 
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -43,32 +56,38 @@ class _TaskDialogState extends State<TaskDialog> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          TextField(
-              controller: _titleController,
-              decoration: InputDecoration(labelText: 'Título'),
-              autofocus: true),
-          TextField(
-              controller: _descriptionController,
-              decoration: InputDecoration(labelText: 'Descrição')),
+         Form(
+          key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                buildtextField(controller: _titleController, labelText: 'Título', validatorMessage: 'Insira o título', autoFocus: true),
+                buildtextField(controller: _titleController, labelText: 'Descrição', validatorMessage: 'Insira a descrição', autoFocus:true),
+                FlatButton(
+                  child: Text('Cancelar'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                FlatButton(
+                  child: Text('Salvar'),
+                  onPressed: () {
+                    if(_formKey.currentState.validate()){
+                      setState(() {
+                        _currentTask.title = _titleController.value.text;
+                        _currentTask.description = _descriptionController.text;
+                        Navigator.of(context).pop(_currentTask);
+                      });
+                    }
+                  },
+                ),
+              ],
+            ),
+          ) 
         ],
+        
+      
       ),
-      actions: <Widget>[
-        FlatButton(
-          child: Text('Cancelar'),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        FlatButton(
-          child: Text('Salvar'),
-          onPressed: () {
-            _currentTask.title = _titleController.value.text;
-            _currentTask.description = _descriptionController.text;
-
-            Navigator.of(context).pop(_currentTask);
-          },
-        ),
-      ],
     );
   }
 }

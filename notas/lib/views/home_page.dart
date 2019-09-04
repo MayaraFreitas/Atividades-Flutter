@@ -40,9 +40,11 @@ class _HomePageState extends State<HomePage> {
     if (_taskList.isEmpty) {
       return Center(
         child: _loading ? CircularProgressIndicator() : Text("Sem tarefas!"),
+        
       );
     } else {
-      return ListView.builder(
+      return ListView.separated(
+        separatorBuilder: (BuildContext context, int index) => Divider(),
         itemBuilder: _buildTaskItemSlidable,
         itemCount: _taskList.length,
       );
