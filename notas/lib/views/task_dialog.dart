@@ -13,6 +13,7 @@ class TaskDialog extends StatefulWidget {
 class _TaskDialogState extends State<TaskDialog> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
+  int _priority = null;
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   Task _currentTask = Task();
@@ -39,6 +40,8 @@ class _TaskDialogState extends State<TaskDialog> {
   Widget buildtextField({TextEditingController controller, String labelText, String validatorMessage, bool autoFocus}){
       return 
        TextFormField(
+              keyboardType: TextInputType.multiline,
+              maxLines: null,
               controller: controller,
               decoration: InputDecoration(labelText: labelText),
               autofocus: autoFocus,
@@ -62,7 +65,8 @@ class _TaskDialogState extends State<TaskDialog> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 buildtextField(controller: _titleController, labelText: 'Título', validatorMessage: 'Insira o título', autoFocus: true),
-                buildtextField(controller: _titleController, labelText: 'Descrição', validatorMessage: 'Insira a descrição', autoFocus:true),
+                buildtextField(controller: _descriptionController, labelText: 'Descrição', validatorMessage: 'Insira a descrição', autoFocus:true),
+                buildDropdown(),
                 FlatButton(
                   child: Text('Cancelar'),
                   onPressed: () {
@@ -76,6 +80,7 @@ class _TaskDialogState extends State<TaskDialog> {
                       setState(() {
                         _currentTask.title = _titleController.value.text;
                         _currentTask.description = _descriptionController.text;
+                        _currentTask.priority = _priority;
                         Navigator.of(context).pop(_currentTask);
                       });
                     }
@@ -85,9 +90,30 @@ class _TaskDialogState extends State<TaskDialog> {
             ),
           ) 
         ],
-        
-      
       ),
-    );
+    )
+    ;
   }
+
+Widget buildDropdown() {
+  return DropdownButton<int>(
+        hint: new Text("Selectione a prioridade"),
+        value: _priority,
+        onChanged: (int newValue) {
+          setState(() {
+            _priority = newValue;
+          });
+        },
+        items: _currentTask.getPriorities()
+          .map<DropdownMenuItem<int>>((int value) {
+            return DropdownMenuItem<int>(
+              value: value,
+              child: Text(value.toString()),
+            );
+          })
+          .toList(),
+
+      );
+  }
+
 }

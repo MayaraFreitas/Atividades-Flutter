@@ -57,6 +57,7 @@ class _HomePageState extends State<HomePage> {
       value: task.isDone,
       title: Text(task.title),
       subtitle: Text(task.description),
+      activeColor: task.getPriorityColor(),
       onChanged: (bool isChecked) {
         setState(() {
           task.isDone = isChecked;
