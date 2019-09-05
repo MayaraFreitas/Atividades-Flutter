@@ -51,6 +51,35 @@ class _TaskDialogState extends State<TaskDialog> {
       ); 
   }
 
+  
+  Widget buildDropdown() {
+  return DropdownButtonFormField<int>(
+        hint: new Text("Selectione a prioridade"),
+        value: _priority,
+        onChanged: (int newValue) {
+          setState(() {
+            _priority = newValue;
+          });
+        },
+        validator: (int value){
+          if(value == null){
+            return "Selecione uma prioridade";
+          }
+          else if(value <= 0 || value >=5){
+              return "A prioridade deve estar entre 0 e 5";
+          }
+        },
+        items: _currentTask.getPriorities()
+          .map<DropdownMenuItem<int>>((int value) {
+            return DropdownMenuItem<int>(
+              value: value,
+              child: Text(value.toString()),
+            );
+          })
+          .toList(),
+      );
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -94,26 +123,4 @@ class _TaskDialogState extends State<TaskDialog> {
     )
     ;
   }
-
-Widget buildDropdown() {
-  return DropdownButton<int>(
-        hint: new Text("Selectione a prioridade"),
-        value: _priority,
-        onChanged: (int newValue) {
-          setState(() {
-            _priority = newValue;
-          });
-        },
-        items: _currentTask.getPriorities()
-          .map<DropdownMenuItem<int>>((int value) {
-            return DropdownMenuItem<int>(
-              value: value,
-              child: Text(value.toString()),
-            );
-          })
-          .toList(),
-
-      );
-  }
-
 }
