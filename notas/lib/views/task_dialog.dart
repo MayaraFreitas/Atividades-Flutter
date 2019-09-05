@@ -39,6 +39,31 @@ class _TaskDialogState extends State<TaskDialog> {
     _descriptionController.clear();
   }
 
+  Widget buildSaveButton(){
+    return FlatButton(
+        child: Text('Salvar'),
+        onPressed: () {
+          if(_formKey.currentState.validate()){
+            setState(() {
+              _currentTask.title = _titleController.value.text;
+              _currentTask.description = _descriptionController.text;
+              _currentTask.priority = _priority;
+              Navigator.of(context).pop(_currentTask);
+            });
+          }
+        },
+      );
+  }
+
+  Widget buildCancelButton(){
+    return FlatButton(
+        child: Text('Cancelar'),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+      );
+  }
+
   Widget buildtextField({TextEditingController controller, String labelText, String validatorMessage, bool autoFocus}){
       return 
        TextFormField(
@@ -80,47 +105,32 @@ class _TaskDialogState extends State<TaskDialog> {
           .toList(),
       );
   }
+  
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text(widget.task == null ? 'Nova tarefa' : 'Editar tarefas'),
-      content: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-         Form(
-          key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                buildtextField(controller: _titleController, labelText: 'Título', validatorMessage: 'Insira o título', autoFocus: true),
-                buildtextField(controller: _descriptionController, labelText: 'Descrição', validatorMessage: 'Insira a descrição', autoFocus:true),
-                buildDropdown(),
-                FlatButton(
-                  child: Text('Cancelar'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                FlatButton(
-                  child: Text('Salvar'),
-                  onPressed: () {
-                    if(_formKey.currentState.validate()){
-                      setState(() {
-                        _currentTask.title = _titleController.value.text;
-                        _currentTask.description = _descriptionController.text;
-                        _currentTask.priority = _priority;
-                        Navigator.of(context).pop(_currentTask);
-                      });
-                    }
-                  },
-                ),
-              ],
-            ),
-          ) 
-        ],
-      ),
-    )
-    ;
+    return SingleChildScrollView(
+      child: AlertDialog(
+        title: Text(widget.task == null ? 'Nova tarefa' : 'Editar tarefas'),
+        content: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+          Form(
+            key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  buildtextField(controller: _titleController, labelText: 'Título', validatorMessage: 'Insira o título', autoFocus: true),
+                  buildtextField(controller: _descriptionController, labelText: 'Descrição', validatorMessage: 'Insira a descrição', autoFocus: true),
+                  buildDropdown(),
+                  buildCancelButton(),
+                  buildSaveButton()
+                ],
+              ),
+            ) 
+          ],
+        ),
+      )
+    );
   }
 }
