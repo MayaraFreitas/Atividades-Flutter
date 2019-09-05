@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:todo_list/models/task.dart';
 
 class TaskDialog extends StatefulWidget {
@@ -28,6 +29,7 @@ class _TaskDialogState extends State<TaskDialog> {
 
     _titleController.text = _currentTask.title;
     _descriptionController.text = _currentTask.description;
+    _priority = _currentTask.priority;
   }
 
   @override
@@ -50,7 +52,6 @@ class _TaskDialogState extends State<TaskDialog> {
               }
       ); 
   }
-
   
   Widget buildDropdown() {
   return DropdownButtonFormField<int>(
@@ -79,7 +80,6 @@ class _TaskDialogState extends State<TaskDialog> {
           .toList(),
       );
   }
-
   @override
   Widget build(BuildContext context) {
     return AlertDialog(

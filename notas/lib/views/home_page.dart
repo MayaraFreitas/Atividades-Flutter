@@ -1,6 +1,7 @@
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:todo_list/helpers/task_helper.dart';
 import 'package:todo_list/models/task.dart';
 import 'package:todo_list/views/task_dialog.dart';
@@ -29,7 +30,12 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Lista de Tarefas')),
+      appBar: AppBar(
+        title: Text('Lista de Tarefas'),
+        actions: <Widget>[
+          buildCircularPercentIndicator()
+        ]
+      ),
       floatingActionButton:
           FloatingActionButton(child: Icon(Icons.add), onPressed: _addNewTask),
       body: _buildTaskList(),
@@ -94,6 +100,16 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Widget buildCircularPercentIndicator(){
+    return new CircularPercentIndicator(
+      radius: 40.0,
+      lineWidth: 5.0,
+      percent: calculeIsDonePercent(),
+      center: new Text(""),
+      progressColor: Colors.tealAccent[700],
+    );
+  }
+
   Future _addNewTask({Task editedTask, int index}) async {
     final task = await showDialog<Task>(
       context: context,
@@ -142,5 +158,12 @@ class _HomePageState extends State<HomePage> {
         },
       ),
     )..show(context);
+  }
+
+  double calculeIsDonePercent(){
+    int total = _taskList.length;
+    int isDone = _taskList.where((t) => t.isDone).length;
+
+    return isDone/total;
   }
 }
