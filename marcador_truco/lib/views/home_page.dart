@@ -170,6 +170,12 @@ class _HomePageState extends State<HomePage> {
                   }
                 );
               }
+              else if(_playerOne.score == 11 && _playerTwo.score == 11){
+                _showDialog(
+                  title: 'Mão de Ferro!',
+                  message: 'Todos os jogadores recebem as cartas “cobertas”, deverão jogar com elas viradas para baixo.'
+                );
+              }
             }
           )
       ],
