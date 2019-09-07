@@ -13,6 +13,7 @@ class _HomePageState extends State<HomePage> {
 
   void _resetScore(Player player, bool resetVictories) {
     setState(() {
+      print("RESET");
       player.score = 0;
       player.victories = resetVictories ? 0 : player.victories;
     });
@@ -77,7 +78,9 @@ class _HomePageState extends State<HomePage> {
             color: Colors.black.withOpacity(0.1),
             onTap: (){
               setState(() {
-                player.score--; 
+                if(player.score > 0){
+                  player.score--;
+                }
               });
             }
           ),
@@ -86,7 +89,9 @@ class _HomePageState extends State<HomePage> {
             color: Colors.deepOrange,
             onTap: (){
               setState(() {
-                player.score++; 
+                if(player.score < 12){
+                  player.score++;
+                }
               });
               if(player.score == 12){
                 _showDialog(
@@ -121,8 +126,9 @@ class _HomePageState extends State<HomePage> {
               title: 'Fim :)',
               message: 'Tem certeza que deseja encerrar a partida?',
               confirm: (){
-                _resetPlayers(true);
-              }
+                 _resetPlayers(true);
+              },
+              cancel: (){ }
             );
           },
           icon: Icon(Icons.refresh)
@@ -163,6 +169,7 @@ class _HomePageState extends State<HomePage> {
   void _showDialog({String title, String message, Function confirm, Function cancel}){
 
     showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (BuildContext context){
         return AlertDialog(
