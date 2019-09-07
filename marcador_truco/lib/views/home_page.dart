@@ -92,7 +92,7 @@ class _HomePageState extends State<HomePage> {
             ),
             actions: <Widget>[
               _buildCancelButton(),
-              _buildSaveNameButton(player),
+              _buildConfirmButton((){ setPlayerName(player); }),
             ],
           ),
         );
@@ -100,7 +100,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-    Widget _buildtextField({TextEditingController controller, String labelText, String validatorMessage}){
+  Widget _buildtextField({TextEditingController controller, String labelText, String validatorMessage}){
 
     controller.clear();
     return 
@@ -205,13 +205,9 @@ class _HomePageState extends State<HomePage> {
           content: Text(message ?? ""),
           actions: <Widget>[
             _buildCancelButton(),
-            FlatButton(
-              child: Text("OK"),
-              onPressed: (){
-                Navigator.of(context).pop();
-                if(cancel != null) confirm();
-              },
-            ),
+            _buildConfirmButton((){
+              if(cancel != null) confirm();
+            }),
           ],
         );
       }
@@ -228,20 +224,21 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildSaveNameButton(Player player){
-
+  Widget _buildConfirmButton(Function action){
     return FlatButton(
       child: Text("Ok"),
       onPressed: (){
         setState(() {
-          player.name = _nameController.value.text;
+          action();
           Navigator.of(context).pop();
         });
       },
     );
   }
 
-// =======================================
+  void setPlayerName(Player player){
+    player.name = _nameController.value.text;
+  }
 
   Widget _buildAppBar(){
     return AppBar(
