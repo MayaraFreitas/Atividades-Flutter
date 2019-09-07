@@ -10,6 +10,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   var _playerOne = new Player(name: 'Nós', score: 0, victories: 0);
   var _playerTwo = new Player(name: 'Eles', score: 0, victories: 0);
+  final _nameController = TextEditingController();
 
   void _resetScore(Player player, bool resetVictories) {
     setState(() {
@@ -30,17 +31,89 @@ class _HomePageState extends State<HomePage> {
     _resetPlayers(true);
   }
 
-  Widget _showPlayerName(String name) {
-    return Text(name.toUpperCase(),
+  Widget _buildBoardPlayers(){
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        _buildBoardPlayer(_playerOne),
+        _buildBoardPlayer(_playerTwo),
+      ],
+    );
+  }
+
+  Widget _buildBoardPlayer(Player player){
+    return Expanded(
+      flex: 1,
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          _showPlayerName(player),
+          _showPlayerScore(player.score),
+          _showPlayerVictories(player.victories),
+          _showScoreButtons(player)
+        ],
+        ),
+    );
+  }
+
+  Widget _showPlayerName(Player player) {
+    return FlatButton(
+      child: new Text(
+        player.name,
         style: TextStyle(
             fontSize: 22.0,
             fontWeight: FontWeight.w500,
-            color: Colors.deepOrange));
+            color: Colors.deepOrange)
+      ),
+      onPressed: (){
+        _buildNameDialog(player);
+      },
+    );
   }
 
-  Widget _showPlayerVictories(int victories){
-    return Text("vitórias ($victories)",
-    style: TextStyle(fontWeight: FontWeight.w300));
+  void _buildNameDialog(Player player){
+
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context){
+        return SingleChildScrollView(
+          child: AlertDialog(
+            title: Text("Insira o nome"),
+            content: 
+              Column(
+                children: <Widget>[
+                  _buildtextField(controller:_nameController, labelText: "Nome", validatorMessage: "msg"),
+                ],
+            ),
+            actions: <Widget>[
+              _buildCancelButton(),
+              _buildSaveNameButton(player),
+            ],
+          ),
+        );
+      }
+    );
+  }
+
+    Widget _buildtextField({TextEditingController controller, String labelText, String validatorMessage}){
+
+    controller.clear();
+    return 
+      TextFormField(
+        keyboardType: TextInputType.multiline,
+        maxLines: null,
+        controller: controller,
+        decoration: InputDecoration(labelText: labelText),
+        autofocus: true,
+        validator: (text) {
+          return text.isEmpty ? validatorMessage : null;
+        }
+      ); 
   }
 
   Widget _showPlayerScore(int score){
@@ -50,22 +123,9 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildRoundedButton({String label, Color color, Function onTap, double size = 52.0}){
-
-    return GestureDetector(
-      onTap: onTap,
-      child: ClipOval(
-        child: Container(
-          height: size,
-          width: size,
-          color: color,
-          child: Center(
-            child: Text(label, style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-            ),
-          ),
-        ),
-      ),
-    );
+  Widget _showPlayerVictories(int victories){
+    return Text("vitórias ($victories)",
+    style: TextStyle(fontWeight: FontWeight.w300));
   }
 
   Widget _showScoreButtons(Player player){
@@ -116,6 +176,73 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Widget _buildRoundedButton({String label, Color color, Function onTap, double size = 52.0}){
+
+    return GestureDetector(
+      onTap: onTap,
+      child: ClipOval(
+        child: Container(
+          height: size,
+          width: size,
+          color: color,
+          child: Center(
+            child: Text(label, style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showDialog({String title, String message, Function confirm, Function cancel}){
+
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context){
+        return AlertDialog(
+          title: Text(title ?? ""),
+          content: Text(message ?? ""),
+          actions: <Widget>[
+            _buildCancelButton(),
+            FlatButton(
+              child: Text("OK"),
+              onPressed: (){
+                Navigator.of(context).pop();
+                if(cancel != null) confirm();
+              },
+            ),
+          ],
+        );
+      }
+    );
+  }
+
+  Widget _buildCancelButton(){
+    return
+    FlatButton(
+      child: Text("Cancelar"),
+      onPressed: (){
+        Navigator.of(context).pop();
+      }
+    );
+  }
+
+  Widget _buildSaveNameButton(Player player){
+
+    return FlatButton(
+      child: Text("Ok"),
+      onPressed: (){
+        setState(() {
+          player.name = _nameController.value.text;
+          Navigator.of(context).pop();
+        });
+      },
+    );
+  }
+
+// =======================================
+
   Widget _buildAppBar(){
     return AppBar(
       title: Text('Marcador de Truco'),
@@ -134,65 +261,6 @@ class _HomePageState extends State<HomePage> {
           icon: Icon(Icons.refresh)
         )
       ],
-    );
-  }
-
-  Widget _buildBoardPlayers(){
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        _buildBoardPlayer(_playerOne),
-        _buildBoardPlayer(_playerTwo),
-      ],
-    );
-  }
-
-  Widget _buildBoardPlayer(Player player){
-    return Expanded(
-      flex: 1,
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          _showPlayerName(player.name),
-          _showPlayerScore(player.score),
-          _showPlayerVictories(player.victories),
-          _showScoreButtons(player)
-        ],
-        ),
-    );
-  }
-
-  void _showDialog({String title, String message, Function confirm, Function cancel}){
-
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (BuildContext context){
-        return AlertDialog(
-          title: Text(title ?? ""),
-          content: Text(message ?? ""),
-          actions: <Widget>[
-            FlatButton(
-              child: Text("CANCEL"),
-              onPressed: (){
-                Navigator.of(context).pop();
-                if(cancel != null) cancel();
-              },
-            ),
-            FlatButton(
-              child: Text("OK"),
-              onPressed: (){
-                Navigator.of(context).pop();
-                if(cancel != null) confirm();
-              },
-            ),
-          ],
-        );
-      }
     );
   }
 
