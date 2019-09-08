@@ -14,7 +14,6 @@ class _HomePageState extends State<HomePage> {
 
   void _resetScore(Player player, bool resetVictories) {
     setState(() {
-      print("RESET");
       player.score = 0;
       player.victories = resetVictories ? 0 : player.victories;
     });
@@ -92,7 +91,7 @@ class _HomePageState extends State<HomePage> {
             ),
             actions: <Widget>[
               _buildCancelButton(),
-              _buildConfirmButton((){ setPlayerName(player); }),
+              _buildConfirmButton(action: (){ _setPlayerName(player); }, title: Text("OK")),
             ],
           ),
         );
@@ -157,17 +156,10 @@ class _HomePageState extends State<HomePage> {
                 _showDialog(
                   title: 'Fim de Jogo',
                   message: '${player.name} ganhou!',
-                  cancel: (){
-                    setState(() {
-                      player.score--;
-                    });
-                  },
-                  confirm: (){
-                    setState(() {
-                     player.victories++; 
-                    });
-                    _resetPlayers(false);
-                  }
+                  actions: <Widget>[
+                    _buildConfirmButton(action: (){ setState(() { player.score--; });}, title: Text("Cancelar") ),
+                    _buildConfirmButton(action: (){ setState(() { player.victories++; }); _resetPlayers(false);}, title: Text("Ok") ),
+                  ],
                 );
               }
               else if(_playerOne.score == 11 && _playerTwo.score == 11){
@@ -200,7 +192,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _showDialog({String title, String message, Function confirm, Function cancel}){
+  void _showDialog({String title, String message, List<Widget> actions}){
 
     showDialog(
       barrierDismissible: false,
@@ -209,12 +201,7 @@ class _HomePageState extends State<HomePage> {
         return AlertDialog(
           title: Text(title ?? ""),
           content: Text(message ?? ""),
-          actions: <Widget>[
-            _buildCancelButton(),
-            _buildConfirmButton((){
-              if(cancel != null) confirm();
-            }),
-          ],
+          actions: actions,
         );
       }
     );
@@ -230,9 +217,9 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildConfirmButton(Function action){
+  Widget _buildConfirmButton({Function action, Text title}){
     return FlatButton(
-      child: Text("Ok"),
+      child: title,
       onPressed: (){
         setState(() {
           action();
@@ -242,7 +229,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void setPlayerName(Player player){
+  void _setPlayerName(Player player){
     player.name = _nameController.value.text;
   }
 
@@ -254,11 +241,13 @@ class _HomePageState extends State<HomePage> {
           onPressed: (){
             _showDialog(
               title: 'Fim :)',
-              message: 'Tem certeza que deseja encerrar a partida?',
-              confirm: (){
-                 _resetPlayers(true);
-              },
-              cancel: (){ }
+              message: 'Deseja encerrar a partida ou o jogo?',
+              actions: 
+              <Widget>[
+                _buildCancelButton(),
+                _buildConfirmButton(action: (){ _resetPlayers(false);}, title: Text("Partida") ),
+                _buildConfirmButton(action: (){ _resetPlayers(true);}, title: Text("Jogo") ),
+              ] 
             );
           },
           icon: Icon(Icons.refresh)
