@@ -33,7 +33,20 @@ Aplicativo desenvolvido em aula + desafios completados como atividade.
 *   [OK] - Aumentar o texto do resultado do IMC (número) e também colocar em negrito.
 
 
-## Aula 3 - Consulta de CEP
+## Aula 3 - Marcador de Truco
+
+## Desafios
+
+
+- [OK] - Não deixar que seja possível ficar com pontos negativos ao clicar em (-1) e também não pode ultrapassar 12 pontos.
+- [OK] - Permitier de alguma forma que a partida seja reiniciada, sem zerar o número de vitórias
+- [OK] - Transformar o AlertDialog em modal para que somente desapareça da tela ao clicar em CANCEL ou OK. Uma dia, precisa utilizar o atributo barrierDismissible
+- [OK] - Trocar os nomes dos usuários ao clicar em cima do nome (Text). Pode-se utilizar um GestureDetector e exibir um AlertDialog com um TextField. [Exemplo de AlertDialog com TextField](https://inducesmile.com/google-flutter/how-to-add-textfield-input-in-an-alert-dialog-in-flutter/).
+- [OK] - Exibir uma notificação da mão de ferro: é a Mão de Onze especial, quando as duas duplas conseguem chegar a 11 pontos na partida. Todos os jogadores recebem as cartas “cobertas”, isto é, viradas para baixo, e deverão jogar assim. Quem vencer a mão, vence a partida
+- [OK] - Instale o plugin [Screen](https://pub.dev/packages/screen#-readme-tab-) e adicione um código para deixar a tela sempre ativa enquanto joga.
+
+
+## Aula 4 - Consulta de CEP
 
 Aplicativo para consultar CEP através da API do VIA CEP
 
@@ -47,7 +60,7 @@ Aplicativo para consultar CEP através da API do VIA CEP
 -   Adicionar um IconButton na AppBar para compartilhar o CEP (utilize o [plugin share](https://pub.dev/packages/share))
 
 
-## Aula 4 - Lista de Tarefas
+## Aula 5 Lista de Tarefas
 
 ## Desafios
 
@@ -57,7 +70,7 @@ Aplicativo para consultar CEP através da API do VIA CEP
 - [OK] [Lógica pronta - faltando uso do componente (Perguntar o nome)] - Criar um campo para nível de prioridades que aceita valores entre 1 (baixa prioridade) e 5 (alta prioridade). Representar isso no card da forma como achar mais interessante.
 - [OK] - Adicionar um [PercentIndicator](https://pub.dev/packages/percent_indicator) circular na barra de navegação para indicar a porcentagem de tarefas concluídas
 
-## Aula 5 - Chatbot
+## Aula 6- Chatbot
 
 ## Desafios
 
