@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text('Lista de Tarefas'),
         actions: <Widget>[
-          buildCircularPercentIndicator()
+          _buildCircularPercentIndicator()
         ]
       ),
       floatingActionButton:
@@ -100,11 +100,11 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget buildCircularPercentIndicator(){
+  Widget _buildCircularPercentIndicator(){
     return new CircularPercentIndicator(
       radius: 40.0,
       lineWidth: 5.0,
-      percent: calculeIsDonePercent(),
+      percent: _calculeIsDonePercent(),
       center: new Text(""),
       progressColor: Colors.tealAccent[700],
     );
@@ -160,7 +160,7 @@ class _HomePageState extends State<HomePage> {
     )..show(context);
   }
 
-  double calculeIsDonePercent(){
+  double _calculeIsDonePercent(){
     int total = _taskList.length;
     int isDone = _taskList.where((t) => t.isDone).length;
 
